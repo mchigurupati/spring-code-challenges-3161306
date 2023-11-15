@@ -3,7 +3,7 @@ package com.cecilireid.springchallenges;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity
@@ -18,5 +18,6 @@ public class CateringJob {
     private String email;
     private String menu;
     private int noOfGuests;
+    @Enumerated(EnumType.ORDINAL)
     private Status status;
 }

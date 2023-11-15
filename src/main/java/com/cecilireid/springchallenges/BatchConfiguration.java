@@ -3,8 +3,6 @@ package com.cecilireid.springchallenges;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -19,11 +17,11 @@ public class BatchConfiguration {
     @Autowired
     public CateringJobRepository repository;
 
-    @Autowired
-    public JobBuilderFactory jobBuilderFactory;
+//    @Autowired
+//    public JobBuilderFactory jobBuilderFactory;
 
-    @Autowired
-    public StepBuilderFactory stepBuilderFactory;
+//    @Autowired
+//    public StepBuilderFactory stepBuilderFactory;
 
     @Bean
     @StepScope
