@@ -27,12 +27,3 @@ To resolve this issue:
 ### Instructor
 
 Cecili Reid 
-                            
-
-
-                            
-
-Check out my other courses on [LinkedIn Learning](https://www.linkedin.com/learning/instructors/cecili-reid).
-
-[lil-course-url]: https://www.linkedin.com/learning/spring-code-challenges
-[lil-thumbnail-url]: https://cdn.lynda.com/course/3161306/3161306-1645727212219-16x9.jpg
