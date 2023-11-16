@@ -18,6 +18,6 @@ public class CateringJob {
     private String email;
     private String menu;
     private int noOfGuests;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Status status;
 }

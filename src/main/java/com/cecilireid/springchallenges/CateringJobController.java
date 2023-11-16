@@ -1,30 +1,34 @@
 package com.cecilireid.springchallenges;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-
+@Slf4j
 @RestController
 @RequestMapping("cateringJobs")
 public class CateringJobController {
     private static final String IMAGE_API = "https://foodish-api.herokuapp.com";
-    private final CateringJobRepository cateringJobRepository;
-    WebClient client;
 
-    public CateringJobController(CateringJobRepository cateringJobRepository, WebClient.Builder webClientBuilder) {
-        this.cateringJobRepository = cateringJobRepository;
-    }
+    @Autowired
+    private CateringJobRepository cateringJobRepository;
+    WebClient client;
 
     @GetMapping
     @ResponseBody
     public List<CateringJob> getCateringJobs() {
-        return cateringJobRepository.findAll();
+        List<CateringJob> result = new ArrayList<>();
+        cateringJobRepository.findAll().forEach(result::add);
+        return result;
     }
 
     @GetMapping("/{id}")
@@ -43,19 +47,45 @@ public class CateringJobController {
         return cateringJobRepository.findByStatus(status);
     }
 
-    public CateringJob createCateringJob(CateringJob job) {
-        return null;
+    @PostMapping("/createCateringJob")
+    @ResponseBody
+    public CateringJob createCateringJob(@RequestBody CateringJob job) {
+        return cateringJobRepository.save(job);
     }
 
-    public CateringJob updateCateringJob(CateringJob cateringJob, Long id) {
-        return null;
+    @PutMapping("{id}/updateCateringJob")
+    @ResponseBody
+    public CateringJob updateCateringJob(@RequestBody CateringJob cateringJob, @PathVariable Long id) {
+        Optional<CateringJob> optionalCateringJob = cateringJobRepository.findById(id);
+        if (optionalCateringJob.isPresent()) {
+            cateringJob.setId(id);
+            return cateringJobRepository.save(cateringJob);
+        }
+        throw  new HttpClientErrorException(HttpStatus.NOT_FOUND);
     }
 
-    public CateringJob patchCateringJob(Long id, JsonNode json) {
-        return null;
+    @PatchMapping("{id}/patchCateringJob")
+    @ResponseBody
+    public CateringJob patchCateringJob(@PathVariable Long id, @RequestBody JsonNode json) {
+        Optional<CateringJob> optionalCateringJob = cateringJobRepository.findById(id);
+        if (optionalCateringJob.isPresent()) {
+            optionalCateringJob.get().setId(id);
+            JsonNode menu = json.get("menu");
+            if (!menu.isNull()) {
+                optionalCateringJob.get().setMenu(menu.asText());
+                return cateringJobRepository.save(optionalCateringJob.get());
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
     }
 
     public Mono<String> getSurpriseImage() {
         return null;
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleClientException() {
+        return "Given order id is not found, Please check and try again.";
     }
 }
